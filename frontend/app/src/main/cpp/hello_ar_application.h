@@ -27,9 +27,9 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-
 #include "include/arcore/arcore_c_api.h"
-
+#include "pose_graph.h"
+#include "keyframe.h"
 #include "glm.h"
 #include "util.h"
 
