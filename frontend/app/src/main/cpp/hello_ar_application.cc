@@ -20,6 +20,7 @@
 #include <jni.h>
 
 #include <array>
+ #include "util.h"
 
 namespace hello_ar {
     namespace {
@@ -184,9 +185,31 @@ namespace hello_ar {
 
         float matrix[16];
         ArPose_getMatrix(ar_session_, camera_pose, matrix);
+        
+        // [추가] Java로 pose 값을 전달
+        JavaVM* java_vm;
+        JNIEnv* env = nullptr;
+
+        if(this->intrinsic_param.fx == 0.0){
+            ArCameraIntrinsics* intrinsics = nullptr;
+            ArCameraIntrinsics_create(ar_session_, &intrinsics);
+
+            ArCamera_getImageIntrinsics(ar_session_, ar_camera, intrinsics);
+        
+            float fx, fy, cx, cy;
+            ArCameraIntrinsics_getFocalLength(ar_session_, intrinsics, &fx, &fy);
+            ArCameraIntrinsics_getPrincipalPoint(ar_session_, intrinsics, &cx, &cy);
+            LOGI("focal length : %f, %f | principal point : %f, %f", fx, fy, cx, cy);
+
+            this->intrinsic_param.update_parameter(fx, fy, cx, cy);
+
+            ArCameraIntrinsics_destroy(intrinsics);
+        }
 
         glm::vec3 cam_pos_vec3 = PoseHelper::GetCameraPosition(pose_raw);
         Point cam_pos{cam_pos_vec3.x, cam_pos_vec3.z};
+
+
 
         // PathNavigator로 경로 생성 시도
         path_navigator_.TryGeneratePathIfNeeded(cam_pos);
@@ -194,7 +217,7 @@ namespace hello_ar {
         // 경로 따라가기
         path_navigator_.UpdateNavigation(cam_pos, matrix, direction_helper_);
 
-        JNIEnv* env = GetJniEnv(); 
+        env = GetJniEnv(); 
 
         if (env) {
             // yaw 정보 JNI로 전달
