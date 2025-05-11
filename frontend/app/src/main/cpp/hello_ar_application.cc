@@ -45,11 +45,11 @@ namespace hello_ar {
 
     }  // namespace
     HelloArApplication::HelloArApplication(AAssetManager* asset_manager, std::string& external_path)
-        : // pose_graph(external_path, "brief_pattern.yml", "brief_k10L6.bin", false, 0.2, 640, 480),
+        : pose_graph(external_path, "brief_pattern.yml", "brief_k10L6.bin", false, 0.2, 640, 480),
         asset_manager_(asset_manager), location_pin_anchor_{nullptr, nullptr} {
     
         LOGI("external_path: %s", external_path.c_str());
-        // pose_graph.loadVocabulary(asset_manager_);
+        pose_graph.loadVocabulary(asset_manager_);
     }
 
     HelloArApplication::~HelloArApplication() {
@@ -419,7 +419,7 @@ namespace hello_ar {
     }
 
     void HelloArApplication::SavePoseGraph() {
-//        pose_graph.command();
+       pose_graph.command();
     }
 
     bool HelloArApplication::IsDepthSupported() {
