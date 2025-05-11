@@ -20,10 +20,10 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-#add_subdirectory(
-#        ${CMAKE_CURRENT_SOURCE_DIR}/../../backend/pose_graph
-#        ${CMAKE_BINARY_DIR}/../../../backend/pose_graph/build
-#)
+add_subdirectory(
+       ${CMAKE_CURRENT_SOURCE_DIR}/../../backend/pose_graph
+       ${CMAKE_BINARY_DIR}/../../../backend/pose_graph/build
+)
 
 # Import the ARCore (Google Play Services for AR) library.
 add_library(arcore SHARED IMPORTED)
@@ -53,16 +53,16 @@ add_library(hello_ar_native SHARED
             src/main/cpp/jni_interface.cc
             src/main/cpp/java_bridge.cc)
 
-#set(POSE_GRAPH_INCLUDE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../backend/pose_graph/src/include)
+set(POSE_GRAPH_INCLUDE_SRC ${CMAKE_CURRENT_SOURCE_DIR}/../../backend/pose_graph/src/include)
 
 target_include_directories(hello_ar_native PRIVATE
-#           ${POSE_GRAPH_INCLUDE_SRC}
+          ${POSE_GRAPH_INCLUDE_SRC}
            src/main/cpp
            src/main/cpp/include
            src/main/cpp/include/renderer)
            
 target_link_libraries(hello_ar_native
-#                      pose_graph
+                      pose_graph
                       android
                       log
                       GLESv2
