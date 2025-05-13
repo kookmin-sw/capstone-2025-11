@@ -670,6 +670,13 @@ bool PoseGraph::InitialPose(KeyFramePtr initframe)
     //1. loadPoseGraph();
     loadPoseGraph();
 
-    
+    //2. brief 매칭
+    db.query(initframe->brief_descriptors, ret, 1);
+    if(ret[0].Score < 0.05) return false;
+    idx = ret[0].idx;
+    auto it = keyframelist.begin();
+    std::advance(it, idx);
 
+    
+    
 }
