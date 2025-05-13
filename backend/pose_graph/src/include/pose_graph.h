@@ -52,7 +52,7 @@ public:
 	void savePoseGraph();
 	void loadPoseGraph();
 	//추가
-	void InitialPose(KeyFramePtr);
+	bool InitialPose(KeyFramePtr);
 	//추가
 	const std::string VOCABULARY_FILE;
 	const bool LOAD_PREVIOUS_POSE_GRAPH;

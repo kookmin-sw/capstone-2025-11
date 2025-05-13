@@ -665,8 +665,11 @@ void PoseGraph::loadPoseGraph()
 }
 
 
-void PoseGraph::InitialPose(KeyFramePtr initframe)
+bool PoseGraph::InitialPose(KeyFramePtr initframe)
 {
+    //1. loadPoseGraph();
     loadPoseGraph();
+
     
+
 }

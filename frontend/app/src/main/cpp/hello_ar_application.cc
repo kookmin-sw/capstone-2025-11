@@ -279,8 +279,8 @@
                  pose_graph.addKeyFrameBuf(keyframe);
                  if(0)
                  {
-                    flag = false;
-                    pose_graph.InitialPose(keyframe);
+                    //boolean type 으로 변경
+                    flag = pose_graph.InitialPose(keyframe);
                  }
              }
          }
