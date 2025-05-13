@@ -106,7 +106,7 @@
    int height_ = 1;
    int display_rotation_ = 0;
    bool is_instant_placement_enabled_ = true;
- 
+   bool flag = true;
    float plane_y_ = -1.6f;
  
    AAssetManager* const asset_manager_;

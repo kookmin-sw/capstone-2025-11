@@ -46,11 +46,14 @@ public:
 	void loadKeyFrame(KeyFramePtr cur_kf, bool flag_detect_loop);
 	void loadVocabulary(AAssetManager* asset_manager);
 	
+	
 	KeyFramePtr getKeyFrame(int index);
 	
 	void savePoseGraph();
 	void loadPoseGraph();
-
+	//추가
+	void InitialPose(KeyFramePtr);
+	//추가
 	const std::string VOCABULARY_FILE;
 	const bool LOAD_PREVIOUS_POSE_GRAPH;
 	const double SKIP_DIS;
@@ -96,6 +99,11 @@ public:
 	int base_sequence;
 	int frame_index;
 
+	//추가
+	int idx;
+	int x;
+	int z;
+	//추가
 	BriefDatabase db;
 	BriefVocabulary* voc;
 };

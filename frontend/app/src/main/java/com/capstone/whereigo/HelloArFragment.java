@@ -17,6 +17,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -139,6 +140,12 @@ public class HelloArFragment extends Fragment implements GLSurfaceView.Renderer,
     instantPlacementSettings.onCreate(activity);
 
     compassView = view.findViewById(R.id.compassView);
+
+    Button savePoseGraphButton = view.findViewById(R.id.button_save_posegraph);
+    savePoseGraphButton.setOnClickListener(v -> {
+      JniInterface.savePoseGraph(nativeApplication);
+      Toast.makeText(activity, "PoseGraph saved!", Toast.LENGTH_SHORT).show();
+    });
 
     //ImageButton settingsButton = view.findViewById(R.id.settings_button);
     //settingsButton.setOnClickListener(v -> {

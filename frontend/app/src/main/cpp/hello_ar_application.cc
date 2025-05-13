@@ -277,6 +277,11 @@
                  KeyFramePtr keyframe = std::make_shared<KeyFrame>(0, _vio_T_w_i, _vio_R_w_i, image_mat, 0);
                  keyframe->computeBRIEFPoint(asset_manager_, intrinsic_param, depth_mat);
                  pose_graph.addKeyFrameBuf(keyframe);
+                 if(0)
+                 {
+                    flag = false;
+                    pose_graph.InitialPose(keyframe);
+                 }
              }
          }
  

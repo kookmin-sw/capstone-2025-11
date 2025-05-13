@@ -499,6 +499,7 @@ void PoseGraph::loopClosure()
     }
 }
 
+
 void PoseGraph::savePoseGraph()
 {
     m_keyframelist.lock();
@@ -661,4 +662,11 @@ void PoseGraph::loadPoseGraph()
     fclose (pFile);
     printf("load pose graph time: %f s\n", tmp_t.toc()/1000);
     base_sequence = 0;
+}
+
+
+void PoseGraph::InitialPose(KeyFramePtr initframe)
+{
+    loadPoseGraph();
+    
 }
