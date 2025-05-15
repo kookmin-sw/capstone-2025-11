@@ -41,11 +41,6 @@ bool PathNavigator::UpdateNavigation(const Point& cam_pos, const float* matrix, 
             arrival_ = true;
         }
 
-        // 상태 업데이트 메시지 전달
-        char buffer[128];
-        snprintf(buffer, sizeof(buffer), "목적지에 도착하였습니다");
-        JavaBridge::UpdatePathStatus(buffer);
-
         return true;
     }
 
@@ -92,11 +87,6 @@ bool PathNavigator::UpdateNavigation(const Point& cam_pos, const float* matrix, 
         current_path_index_++;
         LOGI("✅ 경로 지점 %d 도달", current_path_index_);
     }
-
-    // 상태 업데이트 메시지 전달
-    char buffer[128];
-    snprintf(buffer, sizeof(buffer), "📍 현재 경로 지점 %d / %.2fm 남음", current_path_index_, distance);
-    JavaBridge::UpdatePathStatus(buffer);
 
     return false;
 }

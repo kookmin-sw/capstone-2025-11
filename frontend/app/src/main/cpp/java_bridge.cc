@@ -127,21 +127,6 @@ void JavaBridge::UpdateYaw(float cameraYaw, float pathYaw) {
     env->CallStaticVoidMethod(clazz, method, cameraYaw, pathYaw);
 }
 
-void JavaBridge::UpdatePathStatus(const char* status) {
-    JNIEnv* env = GetEnv();
-    if (!env) return;
-
-    jclass clazz = FindClass("com/capstone/whereigo/HelloArFragment");
-    if (!clazz) return;
-
-    jmethodID method = env->GetStaticMethodID(clazz, "updatePathStatusFromNative", "(Ljava/lang/String;)V");
-    if (!method) return;
-
-    jstring jstatus = env->NewStringUTF(status);
-    env->CallStaticVoidMethod(clazz, method, jstatus);
-    env->DeleteLocalRef(jstatus);
-}
-
 void JavaBridge::VibrateOnce() {
     JNIEnv* env = GetEnv();
     if (!env) return;

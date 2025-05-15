@@ -12,7 +12,6 @@ public:
     static void EnqueueAudio(const char* filename);
 
     static void UpdateYaw(float cameraYaw, float pathYaw);
-    static void UpdatePathStatus(const char* status);
     static void VibrateOnce();
 
 private:

@@ -87,7 +87,6 @@ void KeyFrame::computeBRIEFPoint(AAssetManager* asset_manager, const IntrinsicPa
         point_2d_norm.push_back(keypoints_norm.back().pt);
 
 		depth = 1.0 * pixel_value / 1000.0;
-        // LOGI("pixel_value : %lld, depth : %lf", pixel_value, depth);
 		point_3d.emplace_back(cv::Point3f(mx_u * depth, my_u * depth, depth));
 	}
 }
@@ -209,7 +208,6 @@ bool KeyFrame::searchInAera(const BRIEF::bitset _brief_descriptors,
     {
       best_match = keypoints_old[bestIndex].pt;
       best_match_norm = keypoints_old_norm[bestIndex].pt;
-      LOGI("best match!");
       return true;
     }
     else
@@ -355,8 +353,7 @@ bool KeyFrame::findConnection(KeyFramePtr old_kf){
 	matched_id = point_id;
 
 	TicToc t_match;
-	
-    LOGI("BEFORE searchByBRIEFDes : matched_2d_cur.size() : %d", matched_2d_cur.size());
+
 	searchByBRIEFDes(matched_2d_old, matched_2d_old_norm, status, old_kf->brief_descriptors, old_kf->keypoints, old_kf->keypoints_norm);
 	reduceVector(matched_2d_cur, status);
 	reduceVector(matched_2d_old, status);
@@ -372,9 +369,7 @@ bool KeyFrame::findConnection(KeyFramePtr old_kf){
 	Quaterniond relative_q;
 	double relative_yaw;
 
-    LOGI("AFTER/BEFORE searchByBRIEFDes/PnPRANSAC : matched_2d_cur.size() : %d", matched_2d_cur.size());
 	if ((int) matched_2d_cur.size() > MIN_LOOP_NUM){
-        LOGI("searchByBRIEFDes : SUCCESS");
 	    PnPRANSAC(matched_2d_old_norm, matched_3d, status, PnP_T_old, PnP_R_old);
 	    reduceVector(matched_2d_cur, status);
 	    reduceVector(matched_2d_old, status);
@@ -384,16 +379,13 @@ bool KeyFrame::findConnection(KeyFramePtr old_kf){
 	    reduceVector(matched_id, status);
 	}
 
-    LOGI("AFTER PnPRANSAC matched_2d_cur.size() : %d", matched_2d_cur.size());
 	if ((int) matched_2d_cur.size() > MIN_LOOP_NUM){
-        LOGI("PnPRANSAC : SUCCESS");
 	    relative_t = PnP_R_old.transpose() * (origin_vio_T - PnP_T_old);
 	    relative_q = PnP_R_old.transpose() * origin_vio_R;
 	    relative_yaw = Utility::normalizeAngle(Utility::R2ypr(origin_vio_R).x() - Utility::R2ypr(PnP_R_old).x());
 
 	    if (abs(relative_yaw) < 30.0 && relative_t.norm() < 20.0){
 	    	has_loop = true;
-            LOGI("has_loop!!!!");
 	    	loop_index = old_kf->index;
 	    	loop_info << relative_t.x(), relative_t.y(), relative_t.z(),
 	    	             relative_q.w(), relative_q.x(), relative_q.y(), relative_q.z(),

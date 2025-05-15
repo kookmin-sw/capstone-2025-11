@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/building_input_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- 상단 진행 바 -->
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:progress="50"
+        android:max="100"
+        app:layout_constraintBottom_toBottomOf="@id/guide_form_top"
+        app:layout_constraintStart_toStartOf="@id/guide_form_start"
+        app:layout_constraintEnd_toEndOf="@id/guide_form_end"
+        app:trackThickness="10dp"
+        app:trackCornerRadius="16dp"
+        app:indicatorColor="@color/md_theme_onPrimaryContainer"
+        style="@style/Widget.MaterialComponents.LinearProgressIndicator" />
+
+    <!-- 가이드라인 -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_form_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_form_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_form_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_form_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <!-- 안내 텍스트 -->
+    <TextView
+        android:id="@+id/tv_building_input"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="건물 정보를 입력하세요."
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        android:gravity="center"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/progress_bar"
+        app:layout_constraintStart_toStartOf="@id/guide_form_start"
+        app:layout_constraintEnd_toEndOf="@id/guide_form_end" />
+
+    <!-- 입력 그룹 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/input_group_1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/tv_building_input"
+        app:layout_constraintBottom_toBottomOf="@id/guide_form_bottom"
+        app:layout_constraintStart_toStartOf="@id/guide_form_start"
+        app:layout_constraintEnd_toEndOf="@id/guide_form_end">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_input_group_top_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <TextView
+            android:id="@+id/tv_edit_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="건물명"
+            android:textSize="16sp"
+            android:textColor="#212121"
+            android:gravity="center_vertical|center_horizontal"
+            app:layout_constraintTop_toTopOf="@id/edit_building_name"
+            app:layout_constraintBottom_toBottomOf="@id/edit_building_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/edit_building_name" />
+
+        <EditText
+            android:id="@+id/edit_building_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="건물명"
+            android:background="@drawable/bg_input_box"
+            android:padding="12dp"
+            android:textColor="#000000"
+            app:layout_constraintTop_toTopOf="@id/guide_input_group_top_1"
+            app:layout_constraintBottom_toTopOf="@id/spinner_min"
+            app:layout_constraintStart_toEndOf="@id/tv_edit_name"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_spinner_min"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="지하"
+            android:textSize="16sp"
+            android:textColor="#212121"
+            android:gravity="center_vertical|center_horizontal"
+            app:layout_constraintTop_toTopOf="@id/spinner_min"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_min"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/spinner_min" />
+
+        <Spinner
+            android:id="@+id/spinner_min"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input_box"
+            android:padding="12dp"
+            app:layout_constraintTop_toBottomOf="@id/edit_building_name"
+            app:layout_constraintBottom_toTopOf="@id/spinner_max"
+            app:layout_constraintStart_toEndOf="@id/tv_spinner_min"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_spinner_max"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="지상"
+            android:textSize="16sp"
+            android:textColor="#212121"
+            android:gravity="center_vertical|center_horizontal"
+            app:layout_constraintTop_toTopOf="@id/spinner_max"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_max"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/spinner_max" />
+
+        <Spinner
+            android:id="@+id/spinner_max"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input_box"
+            android:padding="12dp"
+            app:layout_constraintTop_toBottomOf="@id/spinner_min"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_spinner_max"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- 입력 그룹 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/input_group_2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tv_building_input"
+        app:layout_constraintBottom_toTopOf="@id/button_next"
+        app:layout_constraintStart_toStartOf="@id/guide_form_start"
+        app:layout_constraintEnd_toEndOf="@id/guide_form_end">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_input_group_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.4" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_input_group_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.6" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_input_group_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.66" />
+
+        <Spinner
+            android:id="@+id/spinner_floor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_input_box"
+            android:padding="12dp"
+            app:layout_constraintTop_toTopOf="@id/guide_input_group_top"
+            app:layout_constraintBottom_toBottomOf="@id/guide_input_group_bottom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_input_group_end" />
+
+        <TextView
+            android:id="@+id/tv_spinner_floor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="층"
+            android:textSize="16sp"
+            android:textColor="#212121"
+            android:gravity="center_vertical|center_horizontal"
+            app:layout_constraintTop_toTopOf="@id/spinner_floor"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_floor"
+            app:layout_constraintStart_toStartOf="@id/guide_input_group_end"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/button_prev"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="이전"
+        android:visibility="gone"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/md_theme_onPrimaryContainer"
+        app:layout_constraintTop_toBottomOf="@id/guide_form_bottom"
+        app:layout_constraintStart_toStartOf="@id/guide_form_start"
+        app:layout_constraintEnd_toStartOf="@id/button_next" />
+
+    <!-- 다음 버튼 -->
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="다음"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/md_theme_onPrimaryContainer"
+        app:layout_constraintTop_toBottomOf="@id/guide_form_bottom"
+        app:layout_constraintStart_toStartOf="@id/guide_form_start"
+        app:layout_constraintEnd_toEndOf="@id/guide_form_end" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

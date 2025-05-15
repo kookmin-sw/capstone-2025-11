@@ -8,55 +8,45 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstone.whereigo.R;
-
 import java.util.List;
+import java.util.function.Consumer;
 
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.ViewHolder> {
 
-    private final List<String> items;
-    private final OnItemClickListener listener;
+    private final List<String> results;
+    private final Consumer<String> onItemClick;
 
-    public interface OnItemClickListener {
-        void onItemClick(String selectedItem);
-    }
-
-    public SearchResultAdapter(List<String> items, OnItemClickListener listener) {
-        this.items = items;
-        this.listener = listener;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-
-        public ViewHolder(View view) {
-            super(view);
-            textView = view.findViewById(R.id.itemText);
-        }
+    public SearchResultAdapter(List<String> results, Consumer<String> onItemClick) {
+        this.results = results;
+        this.onItemClick = onItemClick;
     }
 
     @NonNull
     @Override
-    public SearchResultAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_search_result, parent, false);
+                .inflate(R.layout.item_search_result, parent, false); // ✅ 변경됨
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SearchResultAdapter.ViewHolder holder, int position) {
-        String item = items.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String item = results.get(position);
         holder.textView.setText(item);
-
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(item);
-            }
-        });
+        holder.itemView.setOnClickListener(v -> onItemClick.accept(item));
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return results.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public final TextView textView;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            textView = itemView.findViewById(R.id.itemText);
+        }
     }
 }

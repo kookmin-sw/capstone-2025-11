@@ -1,22 +1,37 @@
 package com.capstone.whereigo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.hardware.display.DisplayManager;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.SpeechRecognizer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.content.Intent;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.view.WindowCompat;
+
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,161 +43,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private ActivityMainBinding binding;
-    private final int RECORD_AUDIO_REQUEST_CODE = 100;
-    private long backPressedTime = 0;
-    private final long backPressInterval = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         EdgeToEdge.enable(this);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        SearchBar searchBar = binding.searchBar;
-        SearchView searchView = binding.searchView;
-        searchView.setupWithSearchBar(searchBar);
-
-        int searchMenu = R.menu.search_menu;
-        searchBar.inflateMenu(searchMenu);
+        ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         ImageButton settingsButton = findViewById(R.id.settings_button);
-        settingsButton.setOnClickListener(v -> getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_setting, new SettingsFragment())
-                .addToBackStack(null)
-                .commit());
-
-        searchBar.getMenu().findItem(R.id.action_voice_search).setOnMenuItemClickListener(item -> {
-            if (checkAudioPermission()) {
-                if (SpeechRecognizer.isRecognitionAvailable(this)) {
-                    VoiceRecordDialog dialog = new VoiceRecordDialog();
-                    dialog.show(getSupportFragmentManager(), "VoiceRecordDialog");
-                } else {
-                    Toast.makeText(this, "음성 인식을 사용할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                requestAudioPermission();
-            }
-            return true;
-        });
-
-        RecyclerView recyclerView = searchView.findViewById(R.id.search_result);
-
-        List<String> allResults = new ArrayList<>();
-        allResults.add("미래관 445호");
-        allResults.add("미래관 447호");
-        allResults.add("미래관 449호");
-        allResults.add("미래관 444호");
-        allResults.add("미래관 425호");
-        allResults.add("미래관 415호");
-        allResults.add("미래관 405호");
-
-        searchView.getEditText().addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // 필요 없다면 비워둠
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String query = s.toString().trim();
-                List<String> filtered = new ArrayList<>();
-                for (String item : allResults) {
-                    if (item.toLowerCase().contains(query.toLowerCase())) {
-                        filtered.add(item);
-                    }
-                }
-
-                if (!query.isEmpty()) {
-                    recyclerView.setVisibility(View.VISIBLE);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-                    recyclerView.setAdapter(new SearchResultAdapter(filtered, selected -> {
-                        // 예: "미래관 445호" → "미래관"
-                        String buildingName = selected.split(" ")[0];
-                        String fileName = buildingName + ".zip";
-
-                        String url = "https://media-server-jubin.s3.amazonaws.com/" + buildingName + "/" + fileName;
-                        Log.d("filename", url);
-                        FileDownloader.downloadAndUnzipFile(MainActivity.this, url, fileName, buildingName);
-                    }));
-                } else {
-                    recyclerView.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                // 필요 없다면 비워둠
-            }
-        });
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (searchView.isShowing()) {
-                    searchView.hide();
-                } else {
-                    long currentTime = System.currentTimeMillis();
-                    if (currentTime - backPressedTime < backPressInterval) {
-                        setEnabled(false);
-                        getOnBackPressedDispatcher().onBackPressed();
-                    } else {
-                        backPressedTime = currentTime;
-                    }
-                }
-            }
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HelloArFragment())
-                    .commit();
-        }
-
-        searchView.addTransitionListener((view, previousState, newState) ->
-                HelloArFragment.setCameraPoseVisibility(
-                        newState != com.google.android.material.search.SearchView.TransitionState.SHOWN)
-        );
-
-        setupWakeWordListener();
-    }
-
-    private boolean checkAudioPermission() {
-        return ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.RECORD_AUDIO
-        ) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestAudioPermission() {
-        ActivityCompat.requestPermissions(
-                this,
-                new String[]{Manifest.permission.RECORD_AUDIO},
-                RECORD_AUDIO_REQUEST_CODE
-        );
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == RECORD_AUDIO_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "음성 권한이 허용되었습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "음성 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show();
-            }
+            showFloorInputDialog();
         }
     }
 
-    private void setupWakeWordListener() {
-        if (!checkAudioPermission()) {
-            requestAudioPermission();
-        }
+    private void showFloorInputDialog() {
+        View dialogView = getLayoutInflater().inflate(R.layout.dialog_floor_input, null);
+        EditText editText = dialogView.findViewById(R.id.edit_floor_input);
+
+        new AlertDialog.Builder(this)
+                .setTitle("현재 층 입력")
+                .setView(dialogView)
+                .setCancelable(false)
+                .setPositiveButton("확인", (dialog, which) -> {
+                    String input = editText.getText().toString().trim();
+                    if (!input.isEmpty()) {
+                        Toast.makeText(this, input + "층 선택됨", Toast.LENGTH_SHORT).show();
+
+                        // HelloArFragment 로드
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new HelloArFragment())
+                                .commit();
+                    } else {
+                        Toast.makeText(this, "층을 입력해주세요", Toast.LENGTH_SHORT).show();
+                        showFloorInputDialog(); // 재실행
+                    }
+                })
+                .show();
     }
 }

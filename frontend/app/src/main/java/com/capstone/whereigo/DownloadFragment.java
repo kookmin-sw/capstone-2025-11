@@ -1,7 +1,6 @@
 package com.capstone.whereigo;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstone.whereigo.databinding.FragmentDownloadBinding;
 
@@ -39,27 +39,15 @@ public class DownloadFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        androidx.appcompat.widget.Toolbar toolbar = binding.toolbar;
-        androidx.recyclerview.widget.RecyclerView recyclerView = binding.recyclerView;
-
+        RecyclerView recyclerView = binding.downloadList;
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        // ✅ Maps 폴더에서 하위 폴더(맵들) 가져오기
         List<MapData> mapDataList = listMapFolders();
-
         recyclerView.setAdapter(new MapDataAdapter(requireContext(), mapDataList));
 
         int spacing = 16;
         recyclerView.addItemDecoration(new ItemSpacingDecoration(spacing));
         recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL));
-
-        toolbar.setNavigationOnClickListener(v -> requireActivity().getSupportFragmentManager().popBackStack());
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
-            androidx.core.graphics.Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
     }
 
     private List<MapData> listMapFolders() {
@@ -80,6 +68,10 @@ public class DownloadFragment extends Fragment {
                     result.add(new MapData(folder.getName(), sizeString, dateString));
                 }
             }
+        }
+
+        else {
+            result.add(new MapData("다운로드한 지도가 존재하지 않습니다.", "0", "yyyy-MM-dd"));
         }
 
         return result;

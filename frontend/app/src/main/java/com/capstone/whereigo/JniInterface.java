@@ -65,6 +65,12 @@ public class JniInterface {
 
   public static native boolean isDepthSupported(long nativeApplication);
 
+  public static native void changeStatus(long nativeApplication);
+
+  public static native void getPoseStamp(long nativeApplication);
+  public static native float getX();
+  public static native float getZ();
+
   public static native void onSettingsChange(
       long nativeApplication, boolean isInstantPlacementEnabled);
 
@@ -82,6 +88,5 @@ public class JniInterface {
     GLUtils.texImage2D(target, 0, bitmap, 0);
   }
   
-  public static native void savePoseGraph(long nativeApplication);
-
+  public static native void savePoseGraph(long nativeApplication, String[] labels);
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="300dp"
+    android:minHeight="120dp"
+    android:orientation="vertical"
+    android:padding="32dp"
+    android:gravity="center_vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/edit_floor_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:hint="현재 층을 입력하세요"
+            android:inputType="number"
+            android:textSize="16sp"
+            android:padding="20dp" />
+
+        <ImageButton
+            android:id="@+id/btn_stt"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/baseline_mic_48"
+            android:contentDescription="음성 입력"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:scaleType="centerInside" />
+    </LinearLayout>
+</LinearLayout>

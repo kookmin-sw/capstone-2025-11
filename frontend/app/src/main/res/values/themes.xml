@@ -58,6 +58,12 @@
 
     <style name="Theme.Whereigo" parent="Base.Theme.Whereigo" />
 
+    <style name="Theme.Whereigo.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/md_theme_surfaceContainerLowest</item>
+        <item name="android:statusBarColor">#000000</item>
+    </style>
+
+
     <!-- Custom font 적용 -->
     <style name="customTextViewFontStyle" parent="@android:style/Widget.DeviceDefault.TextView">
         <item name="android:fontFamily">@font/font_res</item>

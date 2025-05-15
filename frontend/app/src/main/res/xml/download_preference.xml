@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
         <SwitchPreferenceCompat
-            app:key="vibration"
+            app:key="vibrate"
             app:title="@string/title_viberation"
             app:summaryOff="@string/summary_on_viberation"
             app:summaryOn="@string/summary_off_viberation"
@@ -14,7 +14,7 @@
             app:layout="@layout/add_board_down"/>
 
         <SwitchPreferenceCompat
-            app:key="vibration"
+            app:key="save_sdcard"
             app:title="@string/title_save_location"
             app:summaryOff="@string/summary_on_save_location"
             app:summaryOn="@string/summary_off_save_location"
@@ -25,7 +25,7 @@
             app:layout="@layout/add_board_down"/>
 
         <Preference
-            android:key="map_download"
+            android:key="download_map"
             android:title="지도 확인"
             android:summary="내부 저장된 지도 파일들을 확인 합니다."
             android:icon="@drawable/ic_file_size"
@@ -36,7 +36,7 @@
             app:layout="@layout/add_board_down"/>
 
         <Preference
-            android:key="map_download"
+            android:key="make_map"
             android:title="건물 지도 만들기"
             android:summary="해당 건물에 대한 지도를 작성 합니다."
             android:icon="@drawable/baseline_add_box_24"

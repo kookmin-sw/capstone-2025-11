@@ -17,8 +17,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-
-        <!-- TextView: pose -->
         <TextView
             android:id="@+id/poseTextView"
             android:layout_width="wrap_content"
@@ -26,8 +24,19 @@
             android:textColor="@android:color/white"
             android:textSize="16sp" />
 
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="top|start"
+            android:layout_marginTop="29dp"
+            android:layout_marginStart="7dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:padding="4dp" />
 
-        <!-- 설정 버튼 -->
         <ImageButton
             android:id="@+id/settings_button"
             android:layout_width="50dp"
@@ -40,49 +49,6 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:padding="4dp" />
-
-        <!-- 검색창 컨테이너 -->
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <!-- NestedScrollingChild goes here (NestedScrollView, RecyclerView, etc.). -->
-
-            <com.google.android.material.search.SearchBar
-                android:id="@+id/search_bar"
-                style="@style/Widget.Material3.SearchBar"
-                android:layout_width="310dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="60dp"
-                android:hint="@string/searchbar_hint"
-                android:layout_gravity="top" />
-
-
-            <com.google.android.material.search.SearchView
-                android:id="@+id/search_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                style="@style/Widget.Material3.SearchView"
-                android:hint="@string/searchbar_hint"
-                app:layout_anchor="@id/search_bar">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_result"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
-
-                <androidx.core.widget.NestedScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_behavior="@string/searchbar_scrolling_view_behavior" />
-            </com.google.android.material.search.SearchView>
-
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
     </FrameLayout>
 

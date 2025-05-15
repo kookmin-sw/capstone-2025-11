@@ -49,7 +49,7 @@ public:
 	
 	KeyFramePtr getKeyFrame(int index);
 	
-	void savePoseGraph();
+	void savePoseGraph(const std::vector<std::string>& labels);
 	void loadPoseGraph();
 	//추가
 	bool InitialPose(KeyFramePtr);
@@ -67,17 +67,21 @@ public:
 	Eigen::Vector3d last_t = Eigen::Vector3d(-100, -100, -100);
 
 public:
+    pair<float, float> getLastElementOfKeyFrameList();
 	int detectLoop(KeyFramePtr keyframe, int frame_index);
 	void addKeyFrameIntoVoc(KeyFramePtr keyframe);
 	void addKeyFrameBuf(KeyFramePtr data);
+    int getKeyFrameListSize();
 	void optimize4DoF();
 	void loopClosure();
 	void new_sequence();
 	void command();
 	void setIntrinsicParam(double fx, double fy, double cx, double cy);
 
+	vector<int> labeled_index;
+
 	list<KeyFramePtr> keyframelist;
-	
+
 	std::mutex m_keyframelist;
 	std::mutex m_optimize_buf;
 	std::mutex m_path;

@@ -37,6 +37,10 @@ static JavaVM *g_vm = nullptr;
 static jobject g_class_loader = nullptr;
 static jmethodID g_load_class_method = nullptr;
 
+static jobject g_mappingFragment = nullptr;
+static jmethodID g_mapping_method = nullptr;
+
+pair<float, float> data;
 
 inline jlong jptr(hello_ar::HelloArApplication *native_hello_ar_application) {
   return reinterpret_cast<intptr_t>(native_hello_ar_application);
@@ -105,13 +109,18 @@ JNI_METHOD(void, setClassLoader)
     JavaBridge::SetClassLoader(classLoader);
 }
 
+JNI_METHOD(void, changeStatus)
+(JNIEnv *, jclass, jlong native_application) {
+    native(native_application)->ChangeStatus();
+}
+
 JNI_METHOD(void, onGlSurfaceCreated)
 (JNIEnv *, jclass, jlong native_application) {
   native(native_application)->OnSurfaceCreated();
 }
 
 JNI_METHOD(void, onDisplayGeometryChanged)
-(JNIEnv *, jobject, jlong native_application, int display_rotation, int width,
+(JNIEnv *, jclass, jlong native_application, int display_rotation, int width,
  int height) {
   native(native_application)
       ->OnDisplayGeometryChanged(display_rotation, width, height);
@@ -124,9 +133,36 @@ JNI_METHOD(void, onGlSurfaceDrawFrame)
       ->OnDrawFrame(depth_color_visualization_enabled, use_depth_for_occlusion);
 }
 
+JNIEXPORT void JNICALL
+Java_com_capstone_whereigo_MappingFragment_registerNativeSelf(JNIEnv* env, jobject thiz, jlong native_application) {
+    if (g_mappingFragment == nullptr) {
+        g_mappingFragment = env->NewGlobalRef(thiz); // 전역 참조로 보관
+        jclass clazz = env->GetObjectClass(g_mappingFragment);
+        g_mapping_method = env->GetMethodID(clazz, "updateKeyFrameListSize", "(I)V");
+
+        native(native_application)->g_mappingFragment = g_mappingFragment;
+        native(native_application)->method_id = g_mapping_method;
+    }
+}
+
+JNI_METHOD(void, getPoseStamp)
+(JNIEnv *, jclass, jlong native_application) {
+    data = native(native_application)->pose_graph.getLastElementOfKeyFrameList();
+}
+
+JNI_METHOD(float, getX)
+(JNIEnv *, jclass) {
+    return data.first;
+}
+
+JNI_METHOD(float, getZ)
+(JNIEnv *, jclass) {
+    return data.second;
+}
+
 JNI_METHOD(void, onTouched)
 (JNIEnv *, jclass, jlong native_application, jfloat x, jfloat y) {
-  native(native_application)->OnTouched(x, y);
+//  native(native_application)->OnTouched(x, y);
 }
 
 JNI_METHOD(jboolean, hasDetectedPlanes)
@@ -135,10 +171,9 @@ JNI_METHOD(jboolean, hasDetectedPlanes)
       native(native_application)->HasDetectedPlanes() ? JNI_TRUE : JNI_FALSE);
 }
 
-
 JNI_METHOD(void, savePoseGraph)
-(JNIEnv *, jclass, jlong native_application) {
-  native(native_application)->SavePoseGraph();
+(JNIEnv *, jclass, jlong native_application, jobjectArray labels) {
+  native(native_application)->SavePoseGraph(labels);
 }
 
 JNIEnv *GetJniEnv() {

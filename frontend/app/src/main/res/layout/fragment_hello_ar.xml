@@ -3,82 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface">
+    android:background="@android:color/transparent">
 
-    <android.opengl.GLSurfaceView
-        android:id="@+id/surfaceview"
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="7dp"
+        android:src="@drawable/ic_settings"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:padding="4dp" />
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="top" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/poseTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/search_bar"
+            style="@style/Widget.Material3.SearchBar"
+            android:layout_width="310dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="60dp"
+            android:hint="@string/searchbar_hint"
+            android:layout_gravity="top" />
 
-    <TextView
-        android:id="@+id/keyframe_list_size"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:background="@android:color/darker_gray"
-        android:padding="8dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="60dp" />
-
-    <TextView
-        android:id="@+id/pathStatusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        android:background="@android:color/darker_gray"
-        android:padding="8dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="16dp" />
-
-    <Button
-        android:id="@+id/button_save_posegraph"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save PoseGraph"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="100dp"
-        android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"/>
-
-
-    <LinearLayout
-        android:id="@+id/surface_status_container"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="32dp"
-        android:padding="12dp"
-        android:background="@drawable/bg_surface_hint"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_scan"
-            app:tint="@color/primary" />
-
-        <TextView
-            android:id="@+id/surface_status_text"
+        <com.google.android.material.search.SearchView
+            android:id="@+id/search_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Searching for surfaces..."
-            android:textColor="@color/primary"
-            android:textSize="14sp"
-            android:layout_marginStart="8dp"
-            android:translationX="15dp"
-            android:translationY="1.5dp"/>
-    </LinearLayout>
+            android:layout_height="match_parent"
+            style="@style/Widget.Material3.SearchView"
+            android:hint="@string/searchbar_hint"
+            app:layout_anchor="@id/search_bar">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/searchbar_scrolling_view_behavior" />
+
+        </com.google.android.material.search.SearchView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.capstone.whereigo.ui.DirectionCompassView
         android:id="@+id/compassView"
