@@ -45,7 +45,7 @@
  
      }  // namespace
      HelloArApplication::HelloArApplication(AAssetManager* asset_manager, std::string& external_path)
-         : pose_graph(external_path, "brief_pattern.yml", "brief_k10L6.bin", false, 0.2, 640, 480),
+         : pose_graph(external_path, "brief_pattern.yml", "brief_k10L6.bin", true, 0.2, 640, 480),
          asset_manager_(asset_manager), location_pin_anchor_{nullptr, nullptr} {
      
          LOGI("external_path: %s", external_path.c_str());
@@ -243,13 +243,13 @@
          _vio_T_w_i = Eigen::Vector3d(pose_raw[4], pose_raw[5], pose_raw[6]);
          Eigen::Quaterniond q(pose_raw[3], pose_raw[0], pose_raw[1], pose_raw[2]);  // w, x, y, z
          _vio_R_w_i = q.toRotationMatrix();
- 
          ArImage* depth_image = nullptr;
          ArImage* image = nullptr;
          if(ArFrame_acquireCameraImage(ar_session_, ar_frame_, &image) == AR_SUCCESS) {
              auto depth_status = ArFrame_acquireDepthImage16Bits(ar_session_, ar_frame_, &depth_image);
+//             LOGI("%d", cnt);
              if (depth_status == AR_SUCCESS) {
-                 LOGI("status : %d", depth_status);
+                //  LOGI("status : %d", depth_status);
                  const uint8_t *image_data = nullptr;
                  const uint8_t *depth_data = nullptr;
  
@@ -277,10 +277,18 @@
                  KeyFramePtr keyframe = std::make_shared<KeyFrame>(0, _vio_T_w_i, _vio_R_w_i, image_mat, 0);
                  keyframe->computeBRIEFPoint(asset_manager_, intrinsic_param, depth_mat);
                  pose_graph.addKeyFrameBuf(keyframe);
-                 if(0)
+                 if(flag)
                  {
                     //boolean type 으로 변경
-                    flag = pose_graph.InitialPose(keyframe);
+                    pose_graph.setIntrinsicParam(intrinsic_param.fx, intrinsic_param.fy, intrinsic_param.cx, intrinsic_param.cy);
+                    flag = !(pose_graph.InitialPose(keyframe));
+                    if(!flag)
+                    {
+                        LOGI("idx : %d", pose_graph.idx);
+                        LOGI("x,y를 출력해봅시다!, x : %.2f, z : %.2f", pose_graph.x,  pose_graph.z);
+                        LOGI("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                    }
+
                  }
              }
          }
@@ -290,8 +298,7 @@
          ArImage_release(depth_image);
          ArPose_destroy(camera_pose);
  
-         background_renderer_.Draw(ar_session_, ar_frame_,
-                                   depthColorVisualizationEnabled);
+         background_renderer_.Draw(ar_session_, ar_frame_, depthColorVisualizationEnabled);
  
          // Get light estimation value.
          ArLightEstimate* ar_light_estimate;

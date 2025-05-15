@@ -108,7 +108,9 @@
    bool is_instant_placement_enabled_ = true;
    bool flag = true;
    float plane_y_ = -1.6f;
- 
+   int cnt = 0;
+
+
    AAssetManager* const asset_manager_;
  
    PathNavigator path_navigator_;

@@ -330,7 +330,7 @@ public class HelloArFragment extends Fragment implements GLSurfaceView.Renderer,
 
   public static void updateYawFromNative(float cameraYaw, float pathYaw) {
     if (instance != null && instance.compassView != null) {
-      Log.d("HelloArFragment", "updateYawFromNative called: cameraYaw=" + cameraYaw + ", pathYaw=" + pathYaw);
+      // Log.d("HelloArFragment", "updateYawFromNative called: cameraYaw=" + cameraYaw + ", pathYaw=" + pathYaw);
       instance.compassView.post(() -> instance.compassView.setYawValues(cameraYaw, pathYaw));
     }
   }
