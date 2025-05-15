@@ -407,7 +407,50 @@ bool KeyFrame::findConnection(KeyFramePtr old_kf){
 	return false;
 }
 
+bool KeyFrame::findRelativePose(KeyFramePtr old_kf, Eigen::Vector3d &relative_t, Eigen::Quaterniond &relative_q, cv::Mat K)
+{
+    vector<cv::Point2f> matched_2d_cur, matched_2d_old;
+    vector<cv::Point2f> matched_2d_cur_norm, matched_2d_old_norm;
+    vector<cv::Point3f> matched_3d;
+    vector<double> matched_id;
+    vector<uchar> status;
 
+    matched_3d = point_3d;
+    matched_2d_cur = point_2d_uv;
+    matched_2d_cur_norm = point_2d_norm;
+    matched_id = point_id;
+    LOGI("matched_3d_before : %d", matched_3d.size());
+    searchByBRIEFDes(matched_2d_old, matched_2d_old_norm, status, old_kf->brief_descriptors, old_kf->keypoints, old_kf->keypoints_norm);
+    
+    reduceVector(matched_2d_cur, status);
+    reduceVector(matched_2d_old, status);
+    reduceVector(matched_2d_cur_norm, status);
+    reduceVector(matched_2d_old_norm, status);
+    reduceVector(matched_3d, status);
+    reduceVector(matched_id, status);
+    status.clear();
+
+    if ((int)matched_2d_cur.size() < MIN_LOOP_NUM)
+        return false;
+
+    Eigen::Vector3d PnP_T_old;
+    Eigen::Matrix3d PnP_R_old;
+
+    bool PnP_flag = PnPRANSAC_Relative(matched_2d_old_norm, matched_3d, status, PnP_T_old, PnP_R_old, K);
+    if(!PnP_flag) return false;
+
+    reduceVector(matched_2d_cur, status);
+    reduceVector(matched_2d_old, status);
+    reduceVector(matched_2d_cur_norm, status);
+    reduceVector(matched_2d_old_norm, status);
+    reduceVector(matched_3d, status);
+    reduceVector(matched_id, status);
+
+    relative_t = PnP_T_old;
+    relative_q = Eigen::Quaterniond(PnP_R_old);
+
+    return true;
+}
 
 
 int KeyFrame::HammingDis(const BRIEF::bitset &a, const BRIEF::bitset &b){
