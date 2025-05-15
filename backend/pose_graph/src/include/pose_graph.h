@@ -55,7 +55,7 @@ public:
 	bool InitialPose(KeyFramePtr);
 	//추가
 	const std::string VOCABULARY_FILE;
-	const bool LOAD_PREVIOUS_POSE_GRAPH;
+	bool LOAD_PREVIOUS_POSE_GRAPH;
 	const double SKIP_DIS;
 
 	int skip_first_cnt = 0;
@@ -74,6 +74,7 @@ public:
 	void loopClosure();
 	void new_sequence();
 	void command();
+	void setIntrinsicParam(double fx, double fy, double cx, double cy);
 
 	list<KeyFramePtr> keyframelist;
 	
@@ -100,9 +101,12 @@ public:
 	int frame_index;
 
 	//추가
-	int idx;
-	int x;
-	int z;
+	int idx = 0;
+	double x = 0.0;
+	double z = 0.0;
+    int max_len;
+	int max_count = 0;
+    cv::Mat K;
 	//추가
 	BriefDatabase db;
 	BriefVocabulary* voc;
