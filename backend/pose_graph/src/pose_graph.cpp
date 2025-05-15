@@ -717,5 +717,23 @@ bool PoseGraph::InitialPose(KeyFramePtr init_frame)
         return true;
     }
 
-   
+    //4. 상대 위치 정보
+    Eigen::Vector3d t_map = map_frame->vio_T_w_i;
+    LOGI("이것은 입에서 나는 소리가 아니여 x, x, z, z, %.2f %.2f %.2f %.2f", t_map.x(), rel_t.x(), t_map.z(), rel_t.z());
+    x = t_map.x() + rel_t.x();
+    z = t_map.z() + rel_t.z();
+    LOGI("이것은 입에서 나는 소리여 x, z, %.2f %.2f", x, z);
+
+    LOGI("아이고 변환했슈");
+    Eigen::Matrix3d R_w_m = map_frame->vio_R_w_i;
+    // t_w_m: map_frame의 위치
+    Quaterniond R_w_m_q = Eigen::Quaterniond(R_w_m);
+    Eigen::Vector3d t_w_m = map_frame->vio_T_w_i;
+    Eigen::Vector3d t_w_c = -R_w_m * rel_t + t_w_m;
+    Eigen::Quaterniond R_w_c = R_w_m_q * rel_q;
+    
+    x = t_w_c.x();
+    z = t_w_c.z();
+    LOGI("이것은 입에서 나는 소리여 x, z, %.2f %.2f", x, z);
+    return true;
 }
