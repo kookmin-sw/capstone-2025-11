@@ -32,8 +32,8 @@ PoseGraph::PoseGraph(
     sequence_loop.push_back(0);
     base_sequence = 1;
     
-    t_loopClosure = std::thread(&PoseGraph::loopClosure, this);
-    t_optimization = std::thread(&PoseGraph::optimize4DoF, this);
+//    t_loopClosure = std::thread(&PoseGraph::loopClosure, this);
+//    t_optimization = std::thread(&PoseGraph::optimize4DoF, this);
 }
 
 PoseGraph::~PoseGraph()
@@ -150,7 +150,7 @@ void PoseGraph::addKeyFrame(KeyFramePtr cur_kf, bool flag_detect_loop){
     R = r_drift * R;
     cur_kf->updatePose(P, R);
 
-	keyframelist.push_back(cur_kf);
+    keyframelist.push_back(cur_kf);
 	m_keyframelist.unlock();
 }
 
@@ -218,6 +218,7 @@ int PoseGraph::detectLoop(KeyFramePtr keyframe, int frame_index)
     // //cout << "Searching for Image " << frame_index << ". " << ret << endl;
 
     // TicToc t_add;
+    //돌려줘
     db.add(keyframe->brief_descriptors);
     // //printf("add feature time: %f", t_add.toc());
     bool find_loop = false;
@@ -254,6 +255,7 @@ int PoseGraph::detectLoop(KeyFramePtr keyframe, int frame_index)
 
 void PoseGraph::addKeyFrameIntoVoc(KeyFramePtr keyframe)
 {
+    // 돌려줘
     db.add(keyframe->brief_descriptors);
 }
 
@@ -563,6 +565,7 @@ void PoseGraph::loadPoseGraph()
     pFile = fopen (file_path.c_str(),"r");
     if (pFile == NULL)
     {
+        LOGI("lode previous pose graph error: wrong previous pose graph path or no previous pose graph \n the system will start with new pose graph \n");
         printf("lode previous pose graph error: wrong previous pose graph path or no previous pose graph \n the system will start with new pose graph \n");
         return;
     }
@@ -664,19 +667,55 @@ void PoseGraph::loadPoseGraph()
     base_sequence = 0;
 }
 
-
-bool PoseGraph::InitialPose(KeyFramePtr initframe)
+void PoseGraph::setIntrinsicParam(double fx, double fy, double cx, double cy)
 {
-    //1. loadPoseGraph();
-    loadPoseGraph();
+    K = (cv::Mat_<double>(3, 3) << fx, 0, cx, 0, fy, cy, 0, 0, 1.0);
+}
+
+
+bool PoseGraph::InitialPose(KeyFramePtr init_frame)
+{
+    if(LOAD_PREVIOUS_POSE_GRAPH)
+    {
+        loadPoseGraph();
+        LOAD_PREVIOUS_POSE_GRAPH = false;
+    }
+
+    //껄껄 사실 이녀석은 훌륭하지는 않음 껄껄
+    if(keyframelist.size() == 0) return false;
 
     //2. brief 매칭
-    db.query(initframe->brief_descriptors, ret, 1);
-    if(ret[0].Score < 0.05) return false;
-    idx = ret[0].idx;
+    QueryResults ret;
+    db.query(init_frame->brief_descriptors, ret, 1, 15);
+    if(ret.size() == 0 ) return false;
+    if(ret[0].Score < 0.015) return false;
+    idx = ret[0].Id;
+    
     auto it = keyframelist.begin();
     std::advance(it, idx);
 
-    
-    
+    //3. PnP-RANSAC
+    Eigen::Vector3d rel_t;
+    Eigen::Quaterniond rel_q;
+    KeyFramePtr map_frame = *it;
+    if (max_count < 10000)
+    {
+        bool check = init_frame->findRelativePose(map_frame, rel_t, rel_q, K);
+        if(!check) return false;
+        max_count++;
+        LOGI("Estimated Pose in Map: t = [%.2f %.2f %.2f], q = [%.2f %.2f %.2f %.2f]",
+             rel_t.x(), rel_t.y(), rel_t.z(), rel_q.w(), rel_q.x(), rel_q.y(), rel_q.z());
+        if(rel_t.norm() > 0.3)
+            return false;
+    } 
+    else 
+    {
+        LOGI("Pose estimation failed");
+        Eigen::Vector3d t_map = map_frame->vio_T_w_i;
+        x = t_map.x();
+        z = t_map.z();
+        return true;
+    }
+
+   
 }
