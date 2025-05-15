@@ -288,6 +288,59 @@ void KeyFrame::PnPRANSAC(const vector<cv::Point2f> &matched_2d_old_norm,
     PnP_T_old = PnP_R_old * (-T_pnp);
 }
 
+bool KeyFrame::PnPRANSAC_Relative(const vector<cv::Point2f> &matched_2d_old_norm,
+                         const std::vector<cv::Point3f> &matched_3d,
+                         std::vector<uchar> &status,
+                         Eigen::Vector3d &PnP_T_old, Eigen::Matrix3d &PnP_R_old,
+                         cv::Mat K2)
+{
+    cv::Mat r, rvec, t, D, tmp_r;
+    cv::Mat K = (cv::Mat_<double>(3, 3) << 1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0);
+
+    Matrix3d R_w_c = origin_vio_R;
+    Vector3d T_w_c = origin_vio_T;
+
+    Matrix3d R_inital = R_w_c.inverse();
+    Vector3d P_inital = -(R_inital * T_w_c);
+
+    cv::eigen2cv(R_inital, tmp_r);
+    cv::Rodrigues(tmp_r, rvec);
+    cv::eigen2cv(P_inital, t);
+
+    cv::Mat inliers;
+    TicToc t_pnp_ransac;
+
+    bool status1 = true;
+    LOGI("matched_2d_old_norm, %d", matched_2d_old_norm.size());
+    LOGI("matched_3d %d", matched_3d.size());
+
+    status1 = solvePnPRansac(matched_3d, matched_2d_old_norm, K, D, rvec, t, true, 100, 0.1, 0.99, inliers);
+    
+    if(!status1)
+        return false;
+
+    LOGI("inliers size: %d x %d", inliers.rows, inliers.cols);
+    for (int i = 0; i < (int)matched_2d_old_norm.size(); i++)
+        status.push_back(0);
+
+    for( int i = 0; i < inliers.rows; i++){
+        int n = inliers.at<int>(i);
+        status[n] = 1;
+    }
+
+    cv::Rodrigues(rvec, r);
+
+    Matrix3d R_pnp;
+    cv::cv2eigen(r, R_pnp);
+    PnP_R_old = R_pnp.transpose();
+
+    Vector3d T_pnp;
+    cv::cv2eigen(t, T_pnp);
+    PnP_T_old = PnP_R_old * (-T_pnp);
+
+    return true;
+}
+
 bool KeyFrame::findConnection(KeyFramePtr old_kf){
 	TicToc tmp_t;
 	
@@ -353,6 +406,9 @@ bool KeyFrame::findConnection(KeyFramePtr old_kf){
 	
 	return false;
 }
+
+
+
 
 int KeyFrame::HammingDis(const BRIEF::bitset &a, const BRIEF::bitset &b){
     BRIEF::bitset xor_of_bitset = a ^ b;
