@@ -291,8 +291,7 @@ void KeyFrame::PnPRANSAC(const vector<cv::Point2f> &matched_2d_old_norm,
 bool KeyFrame::PnPRANSAC_Relative(const vector<cv::Point2f> &matched_2d_old_norm,
                          const std::vector<cv::Point3f> &matched_3d,
                          std::vector<uchar> &status,
-                         Eigen::Vector3d &PnP_T_old, Eigen::Matrix3d &PnP_R_old,
-                         cv::Mat K2)
+                         Eigen::Vector3d &PnP_T_old, Eigen::Matrix3d &PnP_R_old)
 {
     cv::Mat r, rvec, t, D, tmp_r;
     cv::Mat K = (cv::Mat_<double>(3, 3) << 1.0, 0, 0, 0, 1.0, 0, 0, 0, 1.0);
@@ -407,7 +406,7 @@ bool KeyFrame::findConnection(KeyFramePtr old_kf){
 	return false;
 }
 
-bool KeyFrame::findRelativePose(KeyFramePtr old_kf, Eigen::Vector3d &relative_t, Eigen::Quaterniond &relative_q, cv::Mat K)
+bool KeyFrame::findRelativePose(KeyFramePtr old_kf, Eigen::Vector3d &relative_t, Eigen::Quaterniond &relative_q)
 {
     vector<cv::Point2f> matched_2d_cur, matched_2d_old;
     vector<cv::Point2f> matched_2d_cur_norm, matched_2d_old_norm;
@@ -436,7 +435,7 @@ bool KeyFrame::findRelativePose(KeyFramePtr old_kf, Eigen::Vector3d &relative_t,
     Eigen::Vector3d PnP_T_old;
     Eigen::Matrix3d PnP_R_old;
 
-    bool PnP_flag = PnPRANSAC_Relative(matched_2d_old_norm, matched_3d, status, PnP_T_old, PnP_R_old, K);
+    bool PnP_flag = PnPRANSAC_Relative(matched_2d_old_norm, matched_3d, status, PnP_T_old, PnP_R_old);
     if(!PnP_flag) return false;
 
     reduceVector(matched_2d_cur, status);

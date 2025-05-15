@@ -280,7 +280,6 @@
                  if(flag)
                  {
                     //boolean type 으로 변경
-                    pose_graph.setIntrinsicParam(intrinsic_param.fx, intrinsic_param.fy, intrinsic_param.cx, intrinsic_param.cy);
                     flag = !(pose_graph.InitialPose(keyframe));
                     if(!flag)
                     {

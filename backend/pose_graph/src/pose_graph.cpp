@@ -681,12 +681,12 @@ bool PoseGraph::InitialPose(KeyFramePtr init_frame)
         LOAD_PREVIOUS_POSE_GRAPH = false;
     }
 
-    //껄껄 사실 이녀석은 훌륭하지는 않음 껄껄
     if(keyframelist.size() == 0) return false;
 
     //2. brief 매칭
     QueryResults ret;
     db.query(init_frame->brief_descriptors, ret, 1, 15);
+    LOGI("열심히 찾고는 있는데 ㅠㅠ");
     if(ret.size() == 0 ) return false;
     if(ret[0].Score < 0.015) return false;
     idx = ret[0].Id;
@@ -700,7 +700,7 @@ bool PoseGraph::InitialPose(KeyFramePtr init_frame)
     KeyFramePtr map_frame = *it;
     if (max_count < 10000)
     {
-        bool check = init_frame->findRelativePose(map_frame, rel_t, rel_q, K);
+        bool check = init_frame->findRelativePose(map_frame, rel_t, rel_q);
         if(!check) return false;
         max_count++;
         LOGI("Estimated Pose in Map: t = [%.2f %.2f %.2f], q = [%.2f %.2f %.2f %.2f]",
@@ -719,12 +719,12 @@ bool PoseGraph::InitialPose(KeyFramePtr init_frame)
 
     //4. 상대 위치 정보
     Eigen::Vector3d t_map = map_frame->vio_T_w_i;
-    LOGI("이것은 입에서 나는 소리가 아니여 x, x, z, z, %.2f %.2f %.2f %.2f", t_map.x(), rel_t.x(), t_map.z(), rel_t.z());
+    // LOGI("이것은 입에서 나는 소리가 아니여 x, x, z, z, %.2f %.2f %.2f %.2f", t_map.x(), rel_t.x(), t_map.z(), rel_t.z());
     x = t_map.x() + rel_t.x();
     z = t_map.z() + rel_t.z();
-    LOGI("이것은 입에서 나는 소리여 x, z, %.2f %.2f", x, z);
+    // LOGI("이것은 입에서 나는 소리여 x, z, %.2f %.2f", x, z);
 
-    LOGI("아이고 변환했슈");
+    // LOGI("아이고 변환했슈");
     Eigen::Matrix3d R_w_m = map_frame->vio_R_w_i;
     // t_w_m: map_frame의 위치
     Quaterniond R_w_m_q = Eigen::Quaterniond(R_w_m);
@@ -734,6 +734,6 @@ bool PoseGraph::InitialPose(KeyFramePtr init_frame)
     
     x = t_w_c.x();
     z = t_w_c.z();
-    LOGI("이것은 입에서 나는 소리여 x, z, %.2f %.2f", x, z);
+    // LOGI("이것은 입에서 나는 소리여 x, z, %.2f %.2f", x, z);
     return true;
 }

@@ -89,8 +89,7 @@ public:
 	bool PnPRANSAC_Relative(const vector<cv::Point2f> &matched_2d_old_norm,
 							const std::vector<cv::Point3f> &matched_3d,
 							std::vector<uchar> &status,
-							Eigen::Vector3d &PnP_T_old, Eigen::Matrix3d &PnP_R_old,
-                            cv::Mat K);
+							Eigen::Vector3d &PnP_T_old, Eigen::Matrix3d &PnP_R_old);
 
 	void getVioPose(Eigen::Vector3d &_T_w_i, Eigen::Matrix3d &_R_w_i);
 	void getPose(Eigen::Vector3d &_T_w_i, Eigen::Matrix3d &_R_w_i);
@@ -98,7 +97,7 @@ public:
 	void updateVioPose(const Eigen::Vector3d &_T_w_i, const Eigen::Matrix3d &_R_w_i);
 	void updateLoop(Eigen::Matrix<double, 8, 1 > &_loop_info);
 	//추가
-	bool findRelativePose(std::shared_ptr<KeyFrame> old_kf, Eigen::Vector3d &relative_t, Eigen::Quaterniond &relative_q, cv::Mat K);
+	bool findRelativePose(std::shared_ptr<KeyFrame> old_kf, Eigen::Vector3d &relative_t, Eigen::Quaterniond &relative_q);
 
 	cv::Point2f undistorted(const IntrinsicParameter& param, const Eigen::Vector2d& p);
 
