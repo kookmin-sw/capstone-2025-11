@@ -2,4 +2,7 @@
     "files.associations": {
         "chrono": "cpp"
     }
+    
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false
 }
