@@ -6,16 +6,11 @@ import android.hardware.display.DisplayManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,8 +34,6 @@ import java.util.Locale;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import io.ktor.websocket.Frame;
 
 public class MappingFragment extends Fragment implements GLSurfaceView.Renderer, DisplayManager.DisplayListener {
     private final String TAG = "MappingFragment";
@@ -93,30 +86,6 @@ public class MappingFragment extends Fragment implements GLSurfaceView.Renderer,
         );
 
         registerNativeSelf(nativeApplication);
-
-        binding.loading.setVisibility(View.VISIBLE);
-
-        View splash = getLayoutInflater().inflate(R.layout.activity_splash, binding.loading, false);
-        ImageView splashIcon = splash.findViewById(R.id.splash_icon);
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        requireActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenWidth = displayMetrics.widthPixels;
-        int moveX = (int) (screenWidth * 0.2f);
-
-        TranslateAnimation animation = new TranslateAnimation(-moveX, moveX, 0, 0);
-        animation.setDuration(2000);
-        animation.setRepeatCount(Animation.INFINITE);
-        animation.setRepeatMode(Animation.RESTART);
-
-        splashIcon.startAnimation(animation);
-
-        TextView tvSplashText = splash.findViewById(R.id.splash_text);
-        tvSplashText.setText("WIGO가 지도 작성을 준비 중...");
-        binding.loading.addView(splash);
-        splash.postDelayed(() -> {
-            splashIcon.clearAnimation();
-            splash.setVisibility(View.GONE);
-        }, 3000);
 
         poseStampRecyclerViewAdapter = new PoseStampRecyclerViewAdapter();
         RecyclerView recyclerView = binding.recyclerView;

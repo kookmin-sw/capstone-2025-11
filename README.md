@@ -3,28 +3,26 @@
 
 ## 1.1. 프로젝트 명
 
-![베너](https://github.com/user-attachments/assets/04489d64-7775-4b4b-b2bc-452bcde0c1a3)
+![베너](https://github.com/user-attachments/assets/c1749dba-18ca-45a9-9aa0-a7bd65ca3682)
 
-## 1.2. 프로젝트 기간 (2025.01.03 ~ 2025.05.30)
+## 1.2. 프로젝트 기간
+* 프로젝트 기간 : (2025.01.03 ~ 2025.05.30)
+<br>(추후 사진 추가)
 
 ## 1.3. 프로젝트 팀 소개
-
-| ![이강욱](https://github.com/user-attachments/assets/25744c27-d8d8-4d43-b308-180abcbfbc16) | ![박주빈](https://github.com/user-attachments/assets/d18e3d4b-cfa5-4f1f-af3d-176be5f1f6ba) | ![박재영](https://github.com/user-attachments/assets/592477d7-cd17-4a96-af90-5a69db3f3b4c) | ![안선영](https://github.com/user-attachments/assets/8a17963a-c925-4e94-9cde-42c7321b7dc0) | ![조성준](https://github.com/user-attachments/assets/9afb1fc6-55d9-40d8-a10f-435d05e7a43b) |
-|:--:|:--:|:--:|:--:|:--:|
-| **이강욱**<br>**Project Leader**<br>Mapping<br>Optimization | **박주빈**<br>Path Planning<br>TTS<br>Pre-mapping | **박재영**<br>UI/UX Design<br>STT<br>Media Server Setup | **안선영**<br>Path Planning<br>Path Visualization | **조성준**<br>Initial Pose Estimation<br>ARCore Mapping |
+| 이강욱  | 박주빈 | 박재영 | 안선영 | 조성준 |
+| --- | --- | --- | --- | --- |
+| ![image](https://github.com/user-attachments/assets/a792a80a-c00a-4620-9855-04c30a36f8a4) |  ![image](https://github.com/user-attachments/assets/0825338d-3674-4d68-a075-d780631c0ea6) | ![image](https://github.com/user-attachments/assets/6939ad93-3f6f-43d1-8754-46ae9612e22b) | ![image](https://github.com/user-attachments/assets/773aed81-3c3c-41de-a940-a0d2ffaec6b2) | ![image](https://github.com/user-attachments/assets/f23b5fcd-a55e-453f-a622-8eee4c79f429) |
+| Project Leader, Back-End (SLAM 및 Android-SLAM 간 통신 인터페이스 구축 담당) | Back-End (SLAM 및 미디어 서버 구축) | Full Stack (Android UI/UX 및 미디어 서버 구축) | Back-End (SLAM 및 미디어 서버 구축) | Front End (Android UI/UX) 및 Android-SLAM 간 통신 인터페이스 구축 담당 |
 
 ## 1.4. 프로젝트 소개 영상
-[![Video Label](https://github-production-user-asset-6210df.s3.amazonaws.com/67058333/445136036-fa6b19c4-b582-40b9-84a7-0ef3ccaf9c58.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20250519%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250519T122829Z&X-Amz-Expires=300&X-Amz-Signature=c523683cbbc1df22bce96e20cd6e53f725f23e325b597e06ff41664ce666ba1e&X-Amz-SignedHeaders=host)](https://youtu.be/CiR6UKElTSQ)
+(추후 업로드)
 
 ## 2.1. 프로젝트 개요
 ![캡스톤디자인_포스터_1차_시안_최종 (2)_250518_182049](https://github.com/user-attachments/assets/f5471e33-b4d0-4d97-89a0-abd4ed261ae4)
 ### 작성한 논문 초록
-<a href= "https://drive.google.com/file/d/1rwjt2DSzcG53jCUNZ1OuFtxskdzbmlFV/view?usp=drive_link" target="_blank">
-  <img src="https://github.com/user-attachments/assets/33537586-9c77-4079-ab55-e915b4463773" width="400px" />
-</a>
-<a href= "https://drive.google.com/file/d/1M15GGOXEPGGRZJ1rb8VA_v8gm8B3BdVf/view?usp=drive_link" target="_blank">
-  <img src="https://github.com/user-attachments/assets/2bb07bba-86dc-4898-aa32-641098d77859" width="400px" />
-</a>
+<img src="https://github.com/user-attachments/assets/33537586-9c77-4079-ab55-e915b4463773" width="500px" />
+<img src="https://github.com/user-attachments/assets/2bb07bba-86dc-4898-aa32-641098d77859" width="500px" />
 
 이 프로젝트는 시각장애인, 초행자, 노약자를 위한 실내 내비게이션 시스템을 개발하는 것을 목표로 합니다. 일반적인 내비게이션이 주로 야외에서 활용되는 반면, 본 프로젝트는 실내 환경에서도 목적지까지 안전하게 이동할 수 있도록 지원합니다.
 
@@ -138,70 +136,70 @@
     <tr>
       <td>1</td>
       <td>모바일 기반 Visual-Inertial SLAM 위치 인식 시스템</td>
-      <td>ARCore 및 VINS-Mono 기반 실내 위치 추정 시스템 개발</td>
+      <td>ARCore 및 VINS-Mono 기반 실내 위치 추정 시스템 개발.</td>
       <td>있음</td>
       <td>부록 1 참조</td>
     </tr>
     <tr>
       <td>2</td>
       <td>Pose Graph 기반 위치 최적화 엔진</td>
-      <td>누적 오차 보정을 위한 최적화 알고리즘 설계 및 구현</td>
+      <td>누적 오차 보정을 위한 최적화 알고리즘 설계 및 구현.</td>
       <td>있음</td>
       <td>부록 1, 부록 2 모두 해당</td>
     </tr>
     <tr>
       <td>3</td>
       <td>경량화된 SLAM 프레임워크</td>
-      <td>모바일 환경에서의 실시간 처리를 위한 연산 최적화 및 SLAM 시스템 경량화</td>
+      <td>모바일 환경에서의 실시간 처리를 위한 연산 최적화 및 SLAM 시스템 경량화.</td>
       <td>있음</td>
       <td>부록 2 참조</td>
     </tr>
     <tr>
       <td>4</td>
       <td>실시간 경로 탐색 및 안내 모듈 (A 알고리즘)*</td>
-      <td>목적지 설정 후 최적 경로 탐색 및 시각화 인터페이스 구현</td>
+      <td>목적지 설정 후 최적 경로 탐색 및 시각화 인터페이스 구현.</td>
       <td>있음</td>
       <td>부록 1 참조</td>
     </tr>
     <tr>
       <td>5</td>
       <td>음성 기반 사용자 인터페이스 (STT/TTS)</td>
-      <td>실내 내비게이션 기능을 위한 음성 명령 인식 및 음성 안내 기능 개발</td>
+      <td>실내 내비게이션 기능을 위한 음성 명령 인식 및 음성 안내 기능 개발.</td>
       <td>있음</td>
       <td>부록 1 참조</td>
     </tr>
     <tr>
       <td>6</td>
       <td>CTE 기반 성능 평가 지표 및 실험 결과 데이터</td>
-      <td>Cross-Track Error 분석을 통한 정확도 평가</td>
+      <td>Cross-Track Error 분석을 통한 정확도 평가.</td>
       <td>있음</td>
       <td>부록 1, 2 참조</td>
     </tr>
     <tr>
       <td>7</td>
       <td>Ground Truth 기반 경로 시각화 비교 데이터셋</td>
-      <td>실제 측정 경로와 시스템 예측 경로 간의 비교를 위한 실험 데이터 시각화</td>
+      <td>실제 측정 경로와 시스템 예측 경로 간의 비교를 위한 실험 데이터 시각화.</td>
       <td>있음</td>
       <td>부록 1, 2 모두 포함됨</td>
     </tr>
     <tr>
       <td>8</td>
       <td>실험용 지도 및 인터페이스(UI) 디자인</td>
-      <td>국민대학교 미래관 4층/6층 기반 테스트 환경 설정 및 UI 요소 구성</td>
+      <td>국민대학교 미래관 4층/6층 기반 테스트 환경 설정 및 UI 요소 구성.</td>
       <td>있음</td>
       <td>부록 1 참조</td>
     </tr>
     <tr>
       <td>9</td>
       <td>자동 미분 최적화 → 수동 미분 기법 전환에 따른 연산 개선 엔진</td>
-      <td>최적화 성능 향상을 위한 수학적 미분 방식 변경 및 Ceres Solver 최적화</td>
+      <td>최적화 성능 향상을 위한 수학적 미분 방식 변경 및 Ceres Solver 최적화.</td>
       <td>있음</td>
       <td>부록 2 참조</td>
     </tr>
     <tr>
       <td>10</td>
       <td>사용자 맞춤형 실내 내비게이션 시나리오 및 응용 가능성 분석 보고서</td>
-      <td>박물관, 쇼핑몰 등에서의 실내 길찾기 응용 방안 제시</td>
+      <td>박물관, 쇼핑몰 등에서의 실내 길찾기 응용 방안 제시.</td>
       <td>있음</td>
       <td>부록 1, 2 결론부에 포함</td>
     </tr>
@@ -227,3 +225,6 @@
 
 
 각 문서는 해당 결과물의 기술적 근거와 구현 내용을 구체적으로 포함하고 있으며, 관련된 알고리즘, 실험 방법, 성능 평가 결과 등을 기술적으로 명세화하는 과정에서 논문으로 정리하면서 학술적 연구로 발전시킬 수 있었다.
+
+##  5.2. 개선 해야 할 사항
+(추후 작성)

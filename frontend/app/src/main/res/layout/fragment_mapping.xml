@@ -127,7 +127,7 @@
                 android:id="@+id/button_save_posegraph"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:backgroundTint="@color/md_theme_onPrimaryContainer"
+                android:backgroundTint="@android:color/holo_blue_dark"
                 android:text="지도 작성"
                 android:textColor="@android:color/white"
                 app:layout_constraintTop_toTopOf="parent"
@@ -141,7 +141,7 @@
                 android:id="@+id/button_pose_stamp"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:textColor="@color/md_theme_onPrimaryContainer"
+                android:textColor="@android:color/white"
                 android:backgroundTint="@android:color/holo_blue_dark"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -150,16 +150,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <FrameLayout
-        android:id="@+id/loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
