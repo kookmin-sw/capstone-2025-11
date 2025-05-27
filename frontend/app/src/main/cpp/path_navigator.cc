@@ -64,13 +64,13 @@ void PathNavigator::ChangeStatus() {
     m_status_flag.unlock();
 }
 
-void PathNavigator::TryGeneratePathIfNeeded(const Point& camera_pos) {
+void PathNavigator::TryGeneratePathIfNeeded(const Point& camera_pos, const Point& pose_pos) {
     if (!goal_set_ || path_generated_ || goal_queue_.empty() || !status_flag) return;
 
     Point current_start = start_queue_.front();
     Point current_goal = goal_queue_.front();
 
-    path_ = astar_pathfinding_.astar(current_start + camera_pos, current_goal, current_floor_);
+    path_ = astar_pathfinding_.astar(current_start + camera_pos + pose_pos, current_goal, current_floor_, pose_pos);
 
     if (!path_.empty()) {
         path_generated_ = true;
@@ -92,7 +92,7 @@ bool PathNavigator::getarrival() {
     return arrival_;
 }
 
-bool PathNavigator::UpdateNavigation(const Point& cam_pos, const float* matrix, DirectionHelper& direction_helper) {
+bool PathNavigator::UpdateNavigation(const Point& cam_pos, const float* matrix, DirectionHelper& direction_helper, const Point& pose_pos) {
     if (!goal_set_ || arrival_ || !status_flag || path_.empty()) return true;
 
     if (current_path_index_ > 0 && current_path_index_ < path_.size() - 2) {
@@ -131,7 +131,7 @@ bool PathNavigator::UpdateNavigation(const Point& cam_pos, const float* matrix, 
 
         Reset();
         path_generated_ = false;
-        TryGeneratePathIfNeeded(cam_pos);
+        TryGeneratePathIfNeeded(cam_pos, pose_pos);
         return false;
     }
 

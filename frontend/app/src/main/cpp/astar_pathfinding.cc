@@ -73,7 +73,7 @@ int AStarPathfinder::FindClosestNode(const Point& coord, int floor) {
     return closest;
 }
 
-std::vector<Point> AStarPathfinder::astar(const Point& start_coord, const Point& goal_coord, int floor) {
+std::vector<Point> AStarPathfinder::astar(const Point& start_coord, const Point& goal_coord, int floor, const Point& pose_pos) {
     const auto& pose_graph = pose_graph_by_floor_[floor];
     const auto& adjacency_list = adjacency_list_by_floor_[floor];
 
@@ -98,7 +98,7 @@ std::vector<Point> AStarPathfinder::astar(const Point& start_coord, const Point&
         if (current == goal) {
             std::vector<Point> path;
             for (int at = goal; at != -1; at = came_from[at]) {
-                path.push_back(pose_graph[at]);
+                path.push_back(pose_graph[at] - pose_pos);
             }
             std::reverse(path.begin(), path.end());
 
@@ -106,6 +106,7 @@ std::vector<Point> AStarPathfinder::astar(const Point& start_coord, const Point&
 //            for (const auto& p : path) {
 //                LOGI("   📍 Point(x=%.2f, z=%.2f)", p.x, p.z);
 //            }
+            
 
             return path;
         }

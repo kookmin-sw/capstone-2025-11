@@ -108,8 +108,8 @@ public:
 
 	//추가
 	int idx = 0;
-	double x = 0.0;
-	double z = 0.0;
+	float x = 0.0;
+	float z = 0.0;
     int max_len;
 	int max_count = 0;
     cv::Mat K;

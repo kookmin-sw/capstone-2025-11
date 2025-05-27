@@ -19,8 +19,8 @@ public:
     PathNavigator();
 
     void SetGoals(const std::vector<Point>& goals);
-    void TryGeneratePathIfNeeded(const Point& camera_pos);
-    bool UpdateNavigation(const Point& cam_pos, const float* pose_raw, DirectionHelper& direction_helper);
+    void TryGeneratePathIfNeeded(const Point& camera_pos, const Point& pose_pos);
+    bool UpdateNavigation(const Point& cam_pos, const float* pose_raw, DirectionHelper& direction_helper, const Point& pose_pos);
     bool IsReadyToRender() const;
     void SetReadyToRenderFalse();
     const std::vector<Point>& GetPath() const;

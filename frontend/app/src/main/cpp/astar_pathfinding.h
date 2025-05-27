@@ -7,7 +7,7 @@
 class AStarPathfinder {
 public:
     void LoadPoseGraph(const std::string& path, int floor);
-    std::vector<Point> astar(const Point& start, const Point& goal, int floor);
+    std::vector<Point> astar(const Point& start, const Point& goal, int floor, const Point& pose_pos);
 
 private:
     std::map<int, std::vector<Point>> pose_graph_by_floor_;

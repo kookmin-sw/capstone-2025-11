@@ -202,14 +202,6 @@ namespace hello_ar {
         float matrix[16];
         ArPose_getMatrix(ar_session_, camera_pose, matrix);
 
-        glm::vec3 cam_pos_vec3 = PoseHelper::GetCameraPosition(pose_raw);
-        Point cam_pos{cam_pos_vec3.x, cam_pos_vec3.z};
-
-        LOGI("📸 카메라 위치: x = %.3f, z = %.3f", cam_pos.x, cam_pos.z);
-
-        path_navigator_.TryGeneratePathIfNeeded(cam_pos);
-        path_navigator_.UpdateNavigation(cam_pos, matrix, direction_helper_);
-
         if(this->intrinsic_param.fx == 0.0){
             ArCameraIntrinsics* intrinsics = nullptr;
             ArCameraIntrinsics_create(ar_session_, &intrinsics);
@@ -322,6 +314,20 @@ namespace hello_ar {
 
             m_adding_keyframe_buf.unlock();
         }
+
+        if(mode)
+        {
+            Point pose_pos{pose_graph.x, pose_graph.z};
+            glm::vec3 cam_pos_vec3 = PoseHelper::GetCameraPosition(pose_raw);
+            Point cam_pos{cam_pos_vec3.x, cam_pos_vec3.z};
+
+            LOGI("📸 카메라 위치: x = %.3f, z = %.3f", cam_pos.x, cam_pos.z);
+            
+            path_navigator_.TryGeneratePathIfNeeded(cam_pos, pose_pos);
+            path_navigator_.UpdateNavigation(cam_pos, matrix, direction_helper_, pose_pos);
+        }
+        
+
 
         background_renderer_.Draw(ar_session_, ar_frame_,
                                   depthColorVisualizationEnabled);
