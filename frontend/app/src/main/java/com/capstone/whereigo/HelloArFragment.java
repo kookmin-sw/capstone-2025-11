@@ -2,6 +2,7 @@ package com.capstone.whereigo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLES20;
@@ -25,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -264,6 +266,11 @@ public class HelloArFragment extends Fragment implements GLSurfaceView.Renderer,
   }
 
   public static void vibrateOnce() {
+    //preference 받아오기
+    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(instance.requireContext());
+    boolean isVibrateOn = sp.getBoolean("vibrate", false);
+    if(!isVibrateOn) return;
+
     Vibrator vibrator = (Vibrator) instance.requireContext().getSystemService(Context.VIBRATOR_SERVICE);
     if (vibrator != null && vibrator.hasVibrator()) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
