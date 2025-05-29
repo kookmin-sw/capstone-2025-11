@@ -77,7 +77,7 @@ public class SearchActivity extends AppCompatActivity {
                         public void onVoiceResult(String command, String context) {
                             runOnUiThread(() -> {
                                 if(Objects.equals(command, "navigate")){
-                                    startNavigationTransition(context, 6); //일단 6층으로 설정
+                                    startNavigationTransition(context, 1);
                                 } else if (Objects.equals(command, "settings")) {
                                     if(Objects.equals(context, "vibrate")){
                                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SearchActivity.this);
@@ -172,16 +172,16 @@ public class SearchActivity extends AppCompatActivity {
                 if (!query.isEmpty()) {
                     binding.searchResult.setVisibility(View.VISIBLE);
                     binding.searchResult.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-                    binding.searchResult.setAdapter(new SearchResultAdapter(filtered, selected -> {
+                    binding.searchResult.setAdapter(new SearchResultAdapter(filtered, roomName -> {
 
-                        String buildingName = selected.split(" ")[0];
-                        String roomNumber = selected.replaceAll("[^0-9]", "");
+//                        String buildingName = selected.split(" ")[0];
+//                        String roomNumber = selected.replaceAll("[^0-9]", "");
 
-                        int currentFloor = 6;
+//                        int currentFloor = 6;
 
-                        String fullSelected = buildingName + " " + roomNumber;
+//                        String fullSelected = buildingName + " " + roomNumber;
 
-                        startNavigationTransition(fullSelected, currentFloor);
+                        startNavigationTransition(roomName, 1);
                     }));
                 } else {
                     binding.searchResult.setVisibility(View.GONE);
@@ -213,7 +213,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void startNavigationTransition(String fullSelected, int currentFloor) {
+    private void startNavigationTransition(String roomName, int currentFloor) {
         binding.searchView.hide();
 
         binding.searchBarDeparture.setVisibility(View.VISIBLE);
@@ -233,13 +233,11 @@ public class SearchActivity extends AppCompatActivity {
                 // 시작 시
             }
 
-                            @Override
-                            public void onTransitionEnd(Transition transition) {
-                                Toast.makeText(getApplicationContext(), fullSelected, Toast.LENGTH_SHORT).show();
-
-                                getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.path_navigation, new HelloArFragment(fullSelected, currentFloor))
-                                        .commit();
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.path_navigation, new HelloArFragment("본부관", roomName, 1))
+                        .commit();
 
                 binding.loading.setVisibility(View.VISIBLE);
                 binding.searchBarDeparture.setVisibility(View.INVISIBLE);

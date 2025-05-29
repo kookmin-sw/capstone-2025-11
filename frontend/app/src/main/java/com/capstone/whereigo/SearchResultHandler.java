@@ -18,20 +18,19 @@ public class SearchResultHandler {
         HelloArFragment getFragment();
     }
 
-    public static void handle(Context context, String selected, FragmentProvider provider, int currentFloor) {
-        String buildingName = selected.split(" ")[0];
+    public static void handle(Context context, String roomName, String buildingName, FragmentProvider provider, int currentFloor) {
         String fileName = buildingName + ".zip";
         String url = "https://media-server-jubin.s3.amazonaws.com/" + buildingName + "/" + fileName;
 
         File labelFile = new File(context.getExternalFilesDir(null), buildingName + "/label.txt");
 
         if (labelFile.exists()) {
-            sendMultiGoals(context, selected, buildingName, provider, currentFloor);
+            sendMultiGoals(context, roomName, buildingName, provider, currentFloor);
         } else {
             FileDownloader.downloadAndUnzipFile(context, url, fileName, buildingName, new FileDownloader.OnUnzipCompleteListener() {
                 @Override
                 public void onComplete() {
-                    waitForLabelFile(context, labelFile, selected, buildingName, provider, currentFloor);
+                    waitForLabelFile(context, labelFile, roomName, buildingName, provider, currentFloor);
                 }
 
                 @Override
@@ -41,7 +40,7 @@ public class SearchResultHandler {
 
         }
     }
-    private static void waitForLabelFile(Context context, File labelFile, String selected, String buildingName, FragmentProvider provider, int currentFloor) {
+    private static void waitForLabelFile(Context context, File labelFile, String roomName, String buildingName, FragmentProvider provider, int currentFloor) {
         Handler handler = new Handler(Looper.getMainLooper());
         long startTime = System.currentTimeMillis();
         long timeout = 10000;
@@ -51,7 +50,7 @@ public class SearchResultHandler {
             public void run() {
                 if (labelFile.exists()) {
                     Log.d("SearchResultHandler", "✅ label.txt 발견됨: " + labelFile.getAbsolutePath());
-                    sendMultiGoals(context, selected, buildingName, provider, currentFloor);
+                    sendMultiGoals(context, roomName, buildingName, provider, currentFloor);
                 } else if (System.currentTimeMillis() - startTime < timeout) {
                     handler.postDelayed(this, 500);
                 } else {
@@ -63,7 +62,7 @@ public class SearchResultHandler {
         handler.post(checkTask);
     }
 
-    private static void sendMultiGoals(Context context, String selected, String buildingName, FragmentProvider provider, int currentFloor) {
+    private static void sendMultiGoals(Context context, String roomName, String buildingName, FragmentProvider provider, int currentFloor) {
         HelloArFragment fragment = provider.getFragment();
         if (fragment == null) {
             Log.e("SearchResultHandler", "❌ HelloArFragment is null");
@@ -76,26 +75,29 @@ public class SearchResultHandler {
         PoseGraphLoader.loadAll(context, buildingName, fragment);
 
         // 목적지 방번호 추출
-        String roomNumber = selected.replaceAll("[^0-9]", "");
-        int goalFloor = Character.getNumericValue(roomNumber.charAt(0));  // 예: 445 → 4
-        goal_floor = goalFloor;
+//        String roomNumber = selected.replaceAll("[^0-9]", "");
+        int goalFloor = currentFloor; // Character.getNumericValue(roomNumber.charAt(0));  // 예: 445 → 4
+//        goal_floor = goalFloor;
 
-        Log.i("SearchResultHandler", "currentFloor: " + currentFloor + ", roomNumber: " + roomNumber + ", goalFloor: " + goalFloor);
+//        Log.i("SearchResultHandler", "currentFloor: " + currentFloor + ", roomNumber: " + roomNumber + ", goalFloor: " + goalFloor);
 
         List<Pair<Float, Float>> goalCoords = new ArrayList<>();
 
         if (currentFloor != goalFloor) {
             // 층 다르면 엘리베이터 경유 목표 설정
-            Pair<Float, Float> toElevator = LabelReader.getCoordinates(context, buildingName, "elevator" + currentFloor);
-            Pair<Float, Float> fromElevator = LabelReader.getCoordinates(context, buildingName, "elevator" + goalFloor);
-            Pair<Float, Float> destination = LabelReader.getCoordinates(context, buildingName, roomNumber);
-
-            if (toElevator != null) goalCoords.add(toElevator);
-            if (fromElevator != null) goalCoords.add(fromElevator);
-            if (destination != null) goalCoords.add(destination);
+//            Pair<Float, Float> toElevator = LabelReader.getCoordinates(context, buildingName, "elevator" + currentFloor);
+//            Pair<Float, Float> fromElevator = LabelReader.getCoordinates(context, buildingName, "elevator" + goalFloor);
+//            Pair<Float, Float> destination = LabelReader.getCoordinates(context, buildingName, roomNumber);
+//
+//            if (toElevator != null) goalCoords.add(toElevator);
+//            if (fromElevator != null) goalCoords.add(fromElevator);
+//            if (destination != null) goalCoords.add(destination);
         } else {
             // 층 같으면 바로 목적지
-            Pair<Float, Float> destination = LabelReader.getCoordinates(context, buildingName, roomNumber);
+
+            Log.d("SearchResultHandler", "buildingName: " + buildingName + ", roomName: " + roomName);
+
+            Pair<Float, Float> destination = LabelReader.getCoordinates(context, buildingName, roomName);
             if (destination != null) goalCoords.add(destination);
         }
 

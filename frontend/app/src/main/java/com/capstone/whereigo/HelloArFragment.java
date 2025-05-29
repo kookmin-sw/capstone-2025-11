@@ -69,10 +69,11 @@ public class HelloArFragment extends Fragment implements GLSurfaceView.Renderer,
   private FragmentHelloArBinding binding;
 
   private int currentFloor;
-  private String fullSelected;
+  private String buildingName, roomName;
 
-  public HelloArFragment(String fullSelected, int currentFloor){
-    this.fullSelected = fullSelected;
+  public HelloArFragment(String buildingName, String roomName, int currentFloor){
+    this.buildingName = buildingName;
+    this.roomName = roomName;
     this.currentFloor = currentFloor;
   }
 
@@ -114,16 +115,17 @@ public class HelloArFragment extends Fragment implements GLSurfaceView.Renderer,
     compassView = binding.compassView;
 
     SearchBar searchBarArrive = requireActivity().findViewById(R.id.search_bar_arrive);
-    searchBarArrive.setText("도착지 : " + fullSelected);
+    searchBarArrive.setText("도착지 : " + roomName);
 
     SearchBar searchBarDeparture = requireActivity().findViewById(R.id.search_bar_departure);
-    searchBarDeparture.setText("출발지 : " + currentFloor + "층");
+    searchBarDeparture.setText("출발지 : 본부관 1층");
 
     SearchResultHandler.handle(
             requireContext(),
-            fullSelected,
+            roomName,
+            this.buildingName,
             () -> (HelloArFragment) requireActivity().getSupportFragmentManager().findFragmentById(R.id.path_navigation),
-            currentFloor
+            this.currentFloor
     );
   }
 
