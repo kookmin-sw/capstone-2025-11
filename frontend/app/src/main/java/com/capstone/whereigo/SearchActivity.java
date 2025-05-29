@@ -67,6 +67,9 @@ public class SearchActivity extends AppCompatActivity {
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        View loadingOverlay = findViewById(R.id.loading);
+        TextView loadingText = findViewById(R.id.loading_text);
+
         binding.searchBarArrive.inflateMenu(R.menu.search_menu);
         binding.searchBarArrive.getMenu().findItem(R.id.action_voice_search).setOnMenuItemClickListener(item -> {
             if (checkAudioPermission()) {
@@ -77,7 +80,7 @@ public class SearchActivity extends AppCompatActivity {
                         public void onVoiceResult(String command, String context) {
                             runOnUiThread(() -> {
                                 if(Objects.equals(command, "navigate")){
-                                    startNavigationTransition(context, 1);
+                                    startNavigationTransition(context, 6); //일단 6층으로 설정
                                 } else if (Objects.equals(command, "settings")) {
                                     if(Objects.equals(context, "vibrate")){
                                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(SearchActivity.this);
@@ -138,18 +141,23 @@ public class SearchActivity extends AppCompatActivity {
             loadBuildingInfo(buildingInfo);
         } else {
             // 없으면 다운로드하고, 완료 후 로드
+            loadingOverlay.setVisibility(View.VISIBLE);
+            loadingText.setText("building_info.txt 다운로드 중입니다...");
+
             FileDownloader.downloadBuildingInfoFile(
                     this,
                     "https://media-server-jubin.s3.amazonaws.com/building_info.txt",
                     new FileDownloader.OnUnzipCompleteListener() {
                         @Override
                         public void onComplete() {
+                            loadingOverlay.setVisibility(View.GONE);
                             File file = new File(getExternalFilesDir(null), "building_info.txt");
                             loadBuildingInfo(file);
                         }
 
                         @Override
                         public void onFailure(String errorMessage) {
+                            loadingOverlay.setVisibility(View.GONE);
                             Toast.makeText(SearchActivity.this, "building_info.txt 다운로드 실패", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -172,16 +180,16 @@ public class SearchActivity extends AppCompatActivity {
                 if (!query.isEmpty()) {
                     binding.searchResult.setVisibility(View.VISIBLE);
                     binding.searchResult.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-                    binding.searchResult.setAdapter(new SearchResultAdapter(filtered, roomName -> {
+                    binding.searchResult.setAdapter(new SearchResultAdapter(filtered, selected -> {
 
-//                        String buildingName = selected.split(" ")[0];
-//                        String roomNumber = selected.replaceAll("[^0-9]", "");
+                        String buildingName = selected.split(" ")[0];
+                        String roomNumber = selected.replaceAll("[^0-9]", "");
 
-//                        int currentFloor = 6;
+                        int currentFloor = 6;
 
-//                        String fullSelected = buildingName + " " + roomNumber;
+                        String fullSelected = buildingName + " " + roomNumber;
 
-                        startNavigationTransition(roomName, 1);
+                        startNavigationTransition(fullSelected, currentFloor);
                     }));
                 } else {
                     binding.searchResult.setVisibility(View.GONE);
@@ -213,11 +221,14 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void startNavigationTransition(String roomName, int currentFloor) {
+    private void startNavigationTransition(String fullSelected, int currentFloor) {
         binding.searchView.hide();
 
         binding.searchBarDeparture.setVisibility(View.VISIBLE);
         binding.settingsButton.setVisibility(View.GONE);
+
+        String buildingName = fullSelected.split(" ")[0];
+        String roomNumber = fullSelected.replaceAll("[^0-9]", "");
 
         final ConstraintSet constraintSet = new ConstraintSet();
         constraintSet.clone(binding.searchMain);
@@ -235,39 +246,41 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onTransitionEnd(Transition transition) {
+                Toast.makeText(getApplicationContext(), fullSelected, Toast.LENGTH_SHORT).show();
+
                 getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.path_navigation, new HelloArFragment("본부관", roomName, 1))
+                        .replace(R.id.path_navigation, new HelloArFragment(buildingName, roomNumber, currentFloor))
                         .commit();
 
                 binding.loading.setVisibility(View.VISIBLE);
                 binding.searchBarDeparture.setVisibility(View.INVISIBLE);
                 binding.searchBarArrive.setVisibility(View.INVISIBLE);
 
-                View splash = getLayoutInflater().inflate(R.layout.activity_splash, binding.loading, false);
-                ImageView splashIcon = splash.findViewById(R.id.splash_icon);
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int screenWidth = displayMetrics.widthPixels;
-
-                int moveX = (int) (screenWidth * 0.2f);
-
-                ObjectAnimator animator = ObjectAnimator.ofFloat(splashIcon, "translationX", -moveX, moveX);
-                animator.setDuration(2000);
-                animator.setRepeatCount(ValueAnimator.INFINITE);
-                animator.setRepeatMode(ValueAnimator.RESTART);
-                animator.start();
-
-                TextView tvSplashText = splash.findViewById(R.id.splash_text);
-                tvSplashText.setText("WIGO가 경로 안내를 준비 중...");
-
-                binding.loading.addView(splash);
-
-                splash.postDelayed(() -> {
-                    animator.cancel();
-                    splash.setVisibility(View.GONE);
-                    binding.searchBarDeparture.setVisibility(View.VISIBLE);
-                    binding.searchBarArrive.setVisibility(View.VISIBLE);
-                }, 3000);
+//                View splash = getLayoutInflater().inflate(R.layout.activity_splash, binding.loading, false);
+//                ImageView splashIcon = splash.findViewById(R.id.splash_icon);
+//                DisplayMetrics displayMetrics = new DisplayMetrics();
+//                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//                int screenWidth = displayMetrics.widthPixels;
+//
+//                int moveX = (int) (screenWidth * 0.2f);
+//
+//                ObjectAnimator animator = ObjectAnimator.ofFloat(splashIcon, "translationX", -moveX, moveX);
+//                animator.setDuration(2000);
+//                animator.setRepeatCount(ValueAnimator.INFINITE);
+//                animator.setRepeatMode(ValueAnimator.RESTART);
+//                animator.start();
+//
+//                TextView tvSplashText = splash.findViewById(R.id.splash_text);
+//                tvSplashText.setText("WIGO가 경로 안내를 준비 중...");
+//
+//                binding.loading.addView(splash);
+//
+//                splash.postDelayed(() -> {
+//                    animator.cancel();
+//                    splash.setVisibility(View.GONE);
+//                    binding.searchBarDeparture.setVisibility(View.VISIBLE);
+//                    binding.searchBarArrive.setVisibility(View.VISIBLE);
+//                }, 3000);
             }
 
             @Override
